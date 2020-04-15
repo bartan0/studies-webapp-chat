@@ -1,0 +1,9 @@
+{
+	"name": "webchat",
+	"scripts": {
+		"dev-start": "node src"
+	},
+	"dependencies": {
+		"express": "^4.17.1"
+	}
+}
