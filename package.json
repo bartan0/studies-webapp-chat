@@ -1,12 +1,14 @@
 {
 	"name": "webchat",
 	"scripts": {
-		"dev-start": "node src",
+		"dev-start": "NODE_PATH=src node src",
 		"docker": "node scripts/docker",
 		"sqlcmd": "node scripts/sqlcmd"
 	},
 	"dependencies": {
 		"express": "^4.17.1",
-		"tedious": "^8.2.0"
+		"path-to-regexp": "^6.1.0",
+		"tedious": "^8.2.0",
+		"websocket": "^1.0.31"
 	}
 }
