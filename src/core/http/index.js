@@ -9,7 +9,7 @@ const server = express()
 
 
 module.exports = Object.assign(function () {
-	server
+	return server
 		.get('/status', (req, res) => res.send('OK\n'))
 		.get('/version', (req, res) => res.send('v0.0.0\n'))
 		.listen(9000)

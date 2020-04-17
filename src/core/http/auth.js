@@ -1,7 +1,8 @@
-module.exports = () => (req, res, next) => {
-	req.user = {
-		id: 'example-user-id'
-	}
+const { authorizeHTTPRequest } = require('lib')
 
-	next()
+
+module.exports = () => (req, res, next) => {
+	authorizeHTTPRequest(req)
+		.then(next)
+		.catch(next)
 }
