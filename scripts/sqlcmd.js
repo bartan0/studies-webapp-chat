@@ -6,7 +6,8 @@ const subprocess = spawn('docker-compose', [
 	'exec', 'database', '/opt/mssql-tools/bin/sqlcmd',
 		'-U', 'SA',
 		'-P', 'Dev-Passwd',
-		'-S', 'localhost'
+		'-S', 'localhost',
+		...process.argv.slice(2)
 ], {
 	stdio: 'inherit'
 })
