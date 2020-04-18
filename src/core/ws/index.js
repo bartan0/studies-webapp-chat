@@ -25,7 +25,7 @@ const getParams = (parsePath =>
 const wsServer = new server()
 	.on('request', req => {
 		App.HTTP.authorizeHTTPRequest(req.httpRequest)
-			.then(() => {
+			.then(async () => {
 				if (!req.requestedProtocols.includes('chat'))
 					return req.reject(400, 'unsupported-protocol')
 
@@ -42,7 +42,7 @@ const wsServer = new server()
 				if (!cb)
 					throw 'wrong-params'
 
-				cb(id, query)
+				await cb(id, query)
 
 				const key = `${resource}:${id}`
 
