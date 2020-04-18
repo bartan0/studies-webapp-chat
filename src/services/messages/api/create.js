@@ -1,5 +1,6 @@
 const {
 	SQL,
+	WS,
 	services: { Messages }
 } = App
 
@@ -22,6 +23,12 @@ Messages.create = async function ({
 		userId: SQL.ID(userId),
 		roomId: SQL.ID(roomId),
 		content: SQL.String(content)
+	})
+
+	WS.emit('room', roomId, 'message', {
+		messageId,
+		userId,
+		content
 	})
 
 	return messageId
