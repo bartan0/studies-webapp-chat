@@ -1,5 +1,25 @@
 const { Connection } = require('tedious')
 
+const Config = {
+	numConnections: 3,
+	reconnectTimeout: 3,
+	connectionConfig: {
+		authentication: {
+			type: 'default',
+			options: {
+				userName: 'SA',
+				password: 'Dev-Passwd'
+			}
+		},
+		server: 'localhost',
+		options: {
+			database: 'develop',
+			port: 9001,
+			trustServerCertificate: true
+		}
+	}
+}
+
 const readyConnections = []
 const requestQueue = []
 
@@ -38,13 +58,13 @@ const removeConnection = conn => {
 }
 
 
-const createConnection = config => {
+const createConnection = () => {
 	const reconnect = () => setTimeout(
-		() => createConnection(config),
-		config.reconnectTimeout * 1000
+		() => createConnection(),
+		Config.reconnectTimeout * 1000
 	)
 
-	const conn = new Connection(config.connectionConfig)
+	const conn = new Connection(Config.connectionConfig)
 		.on('connect', err => {
 			if (err) {
 				console.error(err.toString())
@@ -69,9 +89,11 @@ const createConnection = config => {
 }
 
 
-module.exports = Object.assign(function (config) {
-	for (let i = 0; i < config.numConnections; i++)
-		createConnection(config)
+App.SQL.Pool = Object.assign(function () {
+	for (let i = 0; i < Config.numConnections; i++)
+		createConnection()
 }, {
 	submit
 })
+
+module.exports = () => App.SQL.Pool()

@@ -1,13 +1,15 @@
-const HTTP = require('./http')
+App.registerService('Messages', {
+	create ({
+		userId,
+		roomId,
+		content
+	}) {
+		console.log('Create message', {
+			userId,
+			roomId,
+			content
+		})
 
-function init (context) {
-	this.context = context
-
-	context.HTTPServer.addRouters(HTTP(context))
-}
-
-Object.assign(init,
-	require('./api')
-)
-
-module.exports = init
+		return new Promise(r => r('example-message'))
+	}
+})

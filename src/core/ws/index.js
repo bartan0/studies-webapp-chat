@@ -1,7 +1,5 @@
 const { server } = require('websocket')
-const { authorizeHTTPRequest } = require('lib')
 const { match } = require('path-to-regexp')
-
 
 const connections = new Map
 const resources = new Map
@@ -24,9 +22,9 @@ const getParams = (parsePath =>
 	(match('/:resource/:id?'))
 
 
-const ws = new server()
+const wsServer = new server()
 	.on('request', req => {
-		authorizeHTTPRequest(req.httpRequest)
+		App.HTTP.authorizeHTTPRequest(req.httpRequest)
 			.then(() => {
 				if (!req.requestedProtocols.includes('chat'))
 					return req.reject(400, 'unsupported-protocol')
@@ -39,14 +37,10 @@ const ws = new server()
 					query
 				} = getParams(req)
 
-				console.log('foo')
-
 				const cb = resources.get(resource)
 
 				if (!cb)
 					throw 'wrong-params'
-
-				console.log('before cb')
 
 				cb(id, query)
 
@@ -76,9 +70,7 @@ const ws = new server()
 	})
 
 
-module.exports = Object.assign(function (httpServer) {
-	ws.mount({ httpServer })
-}, {
+App.registerCoreService('WS', {
 	registerResource (resource, cb) {
 		resources.set(resource, cb)
 	}
@@ -90,4 +82,9 @@ module.exports = Object.assign(function (httpServer) {
 		if (conns)
 			conns.forEach(conn => conn.sendUTF(JSON.stringify({ type, payload })))
 	}
+})
+
+
+module.exports = () => wsServer.mount({
+	httpServer: App.HTTP.getHTTPServer()
 })

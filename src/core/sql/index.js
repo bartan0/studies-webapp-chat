@@ -1,29 +1,9 @@
-const { Request } = require('tedious')
+const { Request, TYPES } = require('tedious')
 
-const Pool = require('./pool')
+App.registerCoreService('SQL', {
+	ID: id => [ TYPES.UniqueIdentifier, id ],
+	String: s => [ TYPES.NVarChar, s ],
 
-
-module.exports = Object.assign(function () {
-	Pool({
-		numConnections: 3,
-		reconnectTimeout: 3,
-		connectionConfig: {
-			authentication: {
-				type: 'default',
-				options: {
-					userName: 'SA',
-					password: 'Dev-Passwd'
-				}
-			},
-			server: 'localhost',
-			options: {
-				database: 'develop',
-				port: 9001,
-				trustServerCertificate: true
-			}
-		}
-	})
-}, {
 	request (sql, params) {
 		return new Promise((resolve, reject) => {
 			const res = []
@@ -38,7 +18,7 @@ module.exports = Object.assign(function () {
 					req.addParameter(name, type, value)
 				)
 
-			Pool.submit(req)
+			this.Pool.submit(req)
 		})
 	}
 })
