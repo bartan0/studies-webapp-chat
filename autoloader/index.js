@@ -2,7 +2,9 @@ const fs = require('fs')
 const path = require('path')
 
 const Config = {
-	extensions: [ 'js' ]
+	extensions: [ 'js' ],
+	tagDisabled: 'x',
+	tags: []
 }
 
 
@@ -13,15 +15,35 @@ const getOrder = stem => {
 		return 0
 
 	if (stem === 'lib')
-		return 1
+		return 10
 
 	if (stem === 'test')
-		return 3
+		return 1000
 
-	return 2
+	return 100
 }
 
-const checkTags = tags => true
+const processTags = entry => {
+	const tags = new Set
+
+	entry.tags.forEach(tag => {
+		const order = +tag
+
+		if (order > 0)
+			entry.order += order
+
+		else if (tag === Config.tagDisabled)
+			entry.type = null
+
+		else
+			tags.add(tag)
+	})
+
+	if (Config.tags.length && tags.size && !Config.tags.some(tag => tags.has(tag)))
+		entry.type = null
+
+	return entry
+}
 
 
 const getPathsTree = dirpath => new Promise((resolve, reject) =>
@@ -32,21 +54,19 @@ const getPathsTree = dirpath => new Promise((resolve, reject) =>
 			.map(file => {
 				const type = file.isFile() ? 'file' : file.isDirectory() ? 'dir' : null
 				const parts = file.name.split('.')
+				const ext = type === 'file' ? parts.slice(-1)[0] : null
 
 				return {
 					file,
-					type,
+					type: Config.extensions.includes(ext) ? type : null,
 					stem: parts[0],
 					order: getOrder(parts[0]),
 					tags: parts.slice(1, type === 'file' ? -1 : undefined),
-					ext: type === 'file' ? parts.slice(-1)[0] : null
+					ext
 				}
 			})
-			.filter(({ type, ext, tags }) =>
-				type &&
-				(type !== 'file' || Config.extensions.includes(ext)) &&
-				checkTags(tags)
-			)
+			.map(processTags)
+			.filter(({ type }) => type)
 			.sort((e1, e2) => {
 				const d = e1.order - e2.order
 
