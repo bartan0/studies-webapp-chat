@@ -7,6 +7,8 @@ const Config = {
 	tags: []
 }
 
+const callbacks = []
+
 
 const isNotHidden = file => !file.name.startsWith('.')
 
@@ -58,7 +60,9 @@ const getPathsTree = dirpath => new Promise((resolve, reject) =>
 
 				return {
 					file,
-					type: Config.extensions.includes(ext) ? type : null,
+					type: type !== 'file' || Config.extensions.includes(ext)
+						? type
+						: null,
 					stem: parts[0],
 					order: getOrder(parts[0]),
 					tags: parts.slice(1, type === 'file' ? -1 : undefined),
@@ -84,9 +88,13 @@ const getPathsTree = dirpath => new Promise((resolve, reject) =>
 
 const loadModules = async pathsTree => {
 	for (const elem of await pathsTree)
-		if (typeof elem === 'string')
-			require(elem)
-		else
+		if (typeof elem === 'string') {
+			const res = require(elem)
+
+			if (typeof res === 'function')
+				callbacks.push(res)
+
+		} else
 			await loadModules(elem)
 }
 
@@ -95,4 +103,5 @@ module.exports = (rootpath, config) => {
 	Object.assign(Config, config)
 
 	loadModules(getPathsTree(rootpath))
+		.then(() => callbacks.forEach(cb => cb()))
 }
