@@ -24,16 +24,21 @@ module.exports = Object.assign(function () {
 		}
 	})
 }, {
-	request (sql) {
+	request (sql, params) {
 		return new Promise((resolve, reject) => {
 			const res = []
-
-			Pool.submit(new Request(sql, err => err
+			const req = new Request(sql, err => err
 				? reject(err)
 				: resolve(res)
 			)
 				.on('row', row => res.push(row.map(({ value }) => value)))
-			)
+
+			if (params)
+				Object.entries(params).forEach(([ name, [ type, value ] ]) =>
+					req.addParameter(name, type, value)
+				)
+
+			Pool.submit(req)
 		})
 	}
 })

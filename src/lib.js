@@ -1,3 +1,5 @@
+const { TYPES } = require('tedious')
+
 const authorizeBasic = value => Buffer.from(value, 'base64').toString().split(':')[0]
 
 
@@ -15,4 +17,7 @@ module.exports = {
 
 		reject('not-authorized')
 	})
+	,
+	SQLID: id => [ TYPES.UniqueIdentifier, id ],
+	SQLString: s => [ TYPES.NVarChar, s ]
 }
