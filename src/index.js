@@ -1,17 +1,13 @@
-const HTTPServer = require('./core/http')
-const SQLClient = require('./core/sql')
+global.App = {
+	services: {},
 
-const services = require('./services')
+	registerCoreService (name, service) {
+		this[name] = service
+	}
+	,
+	registerService (name, service) {
+		this.services[name] = service
+	}
+}
 
-const context = Object.assign({
-	HTTPServer,
-	SQLClient
-},
-	services
-)
-
-Object.values(services).forEach(init => init(context))
-
-
-HTTPServer()
-SQLClient()
+require('autoloader')(__dirname)
