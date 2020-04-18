@@ -6,6 +6,7 @@
 		"sqlcmd": "node scripts/sqlcmd"
 	},
 	"dependencies": {
+		"autoloader": "file:autoloader",
 		"express": "^4.17.1",
 		"path-to-regexp": "^6.1.0",
 		"tedious": "^8.2.0",
