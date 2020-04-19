@@ -1,12 +1,21 @@
-const { HTTP } = App
+const jwt = require('jsonwebtoken')
+
+const { Config, HTTP } = App
+
 
 const authorizeType = {
-	Basic (userpass) {
-		return Buffer.from(userpass, 'base64').toString().split(':')[0]
+	Basic (userpass, cb) {
+		cb(true)
+		//return Buffer.from(userpass, 'base64').toString().split(':')[0]
 	}
 	,
-	Bearer (token) {
-		return token
+	Bearer (token, cb) {
+		jwt.verify(token, Config.JWT_SECRET, (err, payload) => err
+			? cb(err)
+			: cb(null, {
+				id: payload.userId
+			})
+		)
 	}
 }
 
@@ -15,12 +24,13 @@ const authorize = req => new Promise((resolve, reject) => {
 	const [ type, value ] = (req.headers['authorization'] || '').split(' ')
 	const auth = authorizeType[type]
 
-	if (auth)
-		return resolve(req.user = {
-			id: auth(value || '')
-		})
+	if (!auth)
+		reject('not-authorized')
 
-	reject('not-authorized')
+	auth(value || '', (err, user) => err
+		? reject('not-authorized')
+		: resolve(req.user = user)
+	)
 })
 
 
