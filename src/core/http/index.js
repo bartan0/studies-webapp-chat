@@ -6,6 +6,10 @@ const { Config } = App
 
 const routers = new Map
 const server = express()
+	.use((req, res, next) => {
+		console.log(`HTTP: ${req.method} ${req.url}`)
+		next()
+	})
 	.use(json())
 
 const httpServer = createServer(server)
