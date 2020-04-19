@@ -4,11 +4,6 @@ const { Config, HTTP } = App
 
 
 const authorizeType = {
-	Basic (userpass, cb) {
-		cb(true)
-		//return Buffer.from(userpass, 'base64').toString().split(':')[0]
-	}
-	,
 	Bearer (token, cb) {
 		jwt.verify(token, Config.JWT_SECRET, (err, payload) => err
 			? cb(err)
