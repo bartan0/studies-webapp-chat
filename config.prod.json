@@ -5,7 +5,6 @@
 	"SQL_HOST": null,
 	"SQL_PORT": null,
 	"SQL_DATABASE": null,
-	"BROKER_HOST": null,
-	"BROKER_PORT": null,
+	"BROKER_URL": null,
 	"JWT_SECRET": null
 }
