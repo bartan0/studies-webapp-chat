@@ -14,7 +14,7 @@ App.SQL.Config = {
 		server: Config.SQL_HOST,
 		options: {
 			database: Config.SQL_DATABASE,
-			port: Number(Config.SQL_PORT),
+			port: Config.SQL_PORT && Number(Config.SQL_PORT),
 			trustServerCertificate: true
 		}
 	}
