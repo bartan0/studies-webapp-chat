@@ -11,8 +11,6 @@ const sqlMaybeCreateDB = name => `
 	BEGIN
 		CREATE DATABASE ${name}
 	END
-
-	USE ${name}
 `
 
 const sqlIfNoTable = (name, sql) => `
@@ -96,8 +94,10 @@ conn
 			error(err)
 
 		try {
-			if (!TARGET)
+			if (!TARGET) {
 				await exec('Initializing database...', sqlMaybeCreateDB(Config.SQL_DATABASE))
+				await exec('Changing database...', `USE ${Config.SQL_DATABASE}`)
+			}
 
 			await exec('Initializing tables...', sqlCreateTables)
 
