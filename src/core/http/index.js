@@ -36,6 +36,11 @@ module.exports = () => {
 		.get('/version', (req, res) =>
 			res.send(`${App.package.name} v${App.package.version}\n`)
 		)
+		.use((err, req, res, next) => {
+			console.error('HTTP:', err.toString())
+
+			res.sendStatus(500)
+		})
 
 	httpServer.listen(Config.PORT)
 }
