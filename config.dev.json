@@ -5,6 +5,6 @@
 	"SQL_HOST": "localhost",
 	"SQL_PORT": "9001",
 	"SQL_DATABASE": "develop",
-	"BROKER_URL": "http://localhost:9002",
+	"BROKER_URL": "ws://localhost:9002",
 	"JWT_SECRET": "dev-jwt-secret"
 }
