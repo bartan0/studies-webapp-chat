@@ -4,6 +4,7 @@
 	"scripts": {
 		"docker": "node scripts/docker",
 		"sqlcmd": "node scripts/sqlcmd",
+		"sqlcmd-prod": "TARGET=production node scripts/sqlcmd",
 		"start": "NODE_PATH=. node src"
 	},
 	"dependencies": {

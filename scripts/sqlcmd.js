@@ -1,12 +1,20 @@
 const { spawn } = require('child_process')
 
+const { TARGET } = process.env
+
+const Config = TARGET === 'production'
+	? require('../secret/database.json')
+	: require('../config.dev.json')
+
+
 const subprocess = spawn('docker-compose', [
 	'--file', 'compose.yml',
 	'--project-name', 'webchat',
 	'exec', 'database', '/opt/mssql-tools/bin/sqlcmd',
-		'-U', 'SA',
-		'-P', 'Dev-Passwd',
-		'-S', 'localhost',
+		'-U', Config.SQL_USERNAME,
+		'-P', Config.SQL_PASSWORD,
+		'-S', Config.SQL_HOST,
+		'-d', Config.SQL_DATABASE,
 		...process.argv.slice(2)
 ], {
 	stdio: 'inherit'
