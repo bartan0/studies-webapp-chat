@@ -1,3 +1,5 @@
+const { APP_TYPE = 'server' } = process.env
+
 global.App = {
 	services: {},
 
@@ -10,4 +12,6 @@ global.App = {
 	}
 }
 
-require('autoloader')(__dirname)
+require('autoloader')(__dirname, {
+	tags: [ APP_TYPE ]
+})

@@ -3,6 +3,9 @@ const { match } = require('path-to-regexp')
 
 const connections = new Map
 const resources = new Map
+const callbacks = {
+	emit: []
+}
 
 const getParams = (parsePath =>
 	({
@@ -37,17 +40,22 @@ const wsServer = new server()
 					query
 				} = getParams(req)
 
-				const cb = resources.get(resource)
+				const callbacks = resources.get(resource)
 
-				if (!cb)
+				if (!callbacks)
 					throw 'wrong-params'
 
-				await cb(id, query)
+				await callbacks.verify(id, query)
 
-				const key = `${resource}:${id}`
+				const key = `${resource}:${id || ''}`
 
 				const conns = connections.get(key)
 				const conn = Object.assign(req.accept('chat', req.origin), { key })
+
+				if (callbacks.message)
+					conn.on('message', ({ utf8Data }) =>
+						callbacks.message(JSON.parse(utf8Data))
+					)
 
 				if (conns)
 					conns.push(conn)
@@ -71,16 +79,30 @@ const wsServer = new server()
 
 
 App.registerCoreService('WS', {
-	registerResource (resource, cb) {
-		resources.set(resource, cb)
+	registerResource (resource, {
+		verify,
+		message
+	}) {
+		resources.set(resource, {
+			verify,
+			message
+		})
 	}
 	,
-	emit (resource, id, type, payload) {
-		const key = `${resource}:${id}`
+	emit (resource, id, type, payload, options = {}) {
+		const key = `${resource}:${id || ''}`
 		const conns = connections.get(key)
 
 		if (conns)
 			conns.forEach(conn => conn.sendUTF(JSON.stringify({ type, payload })))
+
+		if (!options.noCallbacks)
+			callbacks.emit.forEach(cb => cb({ resource, id, type, payload }))
+	}
+	,
+	on (event, cb) {
+		if (callbacks[event])
+			callbacks[event].push(cb)
 	}
 })
 

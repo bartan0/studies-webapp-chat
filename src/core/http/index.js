@@ -3,28 +3,14 @@ const express = require('express')
 
 const { Router, json } = express
 
+const { PORT = 9000 } = process.env
+
 const routers = new Map
 const server = express()
 	.use(json())
 
 const httpServer = createServer(server)
 
-
-const authorizeBasic = value => Buffer.from(value, 'base64').toString().split(':')[0]
-
-const authorizeHTTPRequest = req => new Promise((resolve, reject) => {
-	const [ type, value ] = (req.headers['authorization'] || '').split(' ')
-
-	if (type === 'Basic') {
-		req.user = {
-			id: authorizeBasic(value || '')
-		}
-
-		return resolve()
-	}
-
-	reject('not-authorized')
-})
 
 const getRouter = path => {
 	let router = routers.get(path)
@@ -41,7 +27,6 @@ const getRouter = path => {
 
 
 App.registerCoreService('HTTP', Object.assign(server, {
-	authorizeHTTPRequest,
 	getHTTPServer: () => httpServer,
 	getRouter
 }))
@@ -51,5 +36,5 @@ module.exports = () => {
 		.get('/status', (req, res) => res.send('OK\n'))
 		.get('/version', (req, res) => res.send('v0.0.0\n'))
 
-	httpServer.listen(9000)
+	httpServer.listen(PORT)
 }

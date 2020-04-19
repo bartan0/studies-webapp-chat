@@ -1,0 +1,1 @@
+App.registerService('Broker', {})
