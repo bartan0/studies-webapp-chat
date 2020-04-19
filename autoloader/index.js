@@ -16,13 +16,16 @@ const getOrder = stem => {
 	if (stem === 'index')
 		return 0
 
-	if (stem === 'lib')
+	if (stem === 'config')
 		return 10
 
-	if (stem === 'test')
-		return 1000
+	if (stem === 'lib')
+		return 100
 
-	return 100
+	if (stem === 'test')
+		return 10000
+
+	return 1000
 }
 
 const processTags = entry => {
