@@ -3,6 +3,7 @@
 	"version": "0.0.0",
 	"scripts": {
 		"docker": "node scripts/docker",
+		"init-db": "node scripts/init-db",
 		"sqlcmd": "node scripts/sqlcmd",
 		"sqlcmd-prod": "TARGET=production node scripts/sqlcmd",
 		"start": "NODE_PATH=. node src"
