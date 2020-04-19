@@ -19,7 +19,7 @@ Rooms.create = async function (name, {
 	})
 
 	await Promise.all(membersIds.map(memberId => SQL.request(`
-		INSERT INTO rooms_members(roomId, userId) VALUES (@roomId, @userId)
+		INSERT INTO rooms_members(room_id, user_id) VALUES (@roomId, @userId)
 	`, {
 		roomId: SQL.ID(roomId),
 		userId: SQL.ID(memberId)
