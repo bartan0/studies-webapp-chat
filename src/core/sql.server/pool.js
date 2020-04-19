@@ -1,24 +1,6 @@
 const { Connection } = require('tedious')
 
-const Config = {
-	numConnections: 3,
-	reconnectTimeout: 3,
-	connectionConfig: {
-		authentication: {
-			type: 'default',
-			options: {
-				userName: 'SA',
-				password: 'Dev-Passwd'
-			}
-		},
-		server: 'localhost',
-		options: {
-			database: 'develop',
-			port: 9001,
-			trustServerCertificate: true
-		}
-	}
-}
+const { Config } = App.SQL
 
 const readyConnections = []
 const requestQueue = []

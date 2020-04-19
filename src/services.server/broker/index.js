@@ -1,5 +1,9 @@
-const { WS, WSClient } = App
-const URL = 'ws://localhost:9100'
+const { Config, WS, WSClient } = App
+
+let URL = `http://${Config.BROKER_HOST}`
+
+if (Config.BROKER_PORT)
+	URL += `:${Config.BROKER_PORT}`
 
 const client = new WSClient(URL, 'broker')
 	.onMessage((type, p) => {

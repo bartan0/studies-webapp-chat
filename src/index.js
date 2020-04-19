@@ -1,6 +1,7 @@
 const { APP_TYPE = 'server' } = process.env
 
 global.App = {
+	package: require('package.json'),
 	services: {},
 
 	registerCoreService (name, service) {

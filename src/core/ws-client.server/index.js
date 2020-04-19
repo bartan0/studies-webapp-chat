@@ -8,7 +8,7 @@ const instances = new Map
 
 
 App.registerCoreService('WSClient',
-	Object.assign(function (urlBase, id) {
+	Object.assign(function (urlBase, id, options = {}) {
 		instances.set(id, Object.assign(this, {
 			connection: null,
 			queue: [],
@@ -50,9 +50,9 @@ App.registerCoreService('WSClient',
 						`${urlBase}/${resource}/${id || ''}`,
 						[ 'chat' ],
 						'localhost',
-						{
-							'Authorization': 'Bearer foobar'
-						}
+						Object.assign({},
+							options.token && { 'Authorization': `Bearer ${options.token}` }
+						)
 					)
 
 				return this

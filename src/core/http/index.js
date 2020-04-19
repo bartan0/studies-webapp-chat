@@ -2,8 +2,7 @@ const { createServer } = require('http')
 const express = require('express')
 
 const { Router, json } = express
-
-const { PORT = 9000 } = process.env
+const { Config } = App
 
 const routers = new Map
 const server = express()
@@ -34,7 +33,9 @@ App.registerCoreService('HTTP', Object.assign(server, {
 module.exports = () => {
 	server
 		.get('/status', (req, res) => res.send('OK\n'))
-		.get('/version', (req, res) => res.send('v0.0.0\n'))
+		.get('/version', (req, res) =>
+			res.send(`${App.package.name} v${App.package.version}\n`)
+		)
 
-	httpServer.listen(PORT)
+	httpServer.listen(Config.PORT)
 }

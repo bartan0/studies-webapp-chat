@@ -1,0 +1,10 @@
+{
+	"PORT": "9000",
+	"SQL_USERNAME": "SA",
+	"SQL_PASSWORD": "Dev-Passwd",
+	"SQL_HOST": "localhost",
+	"SQL_PORT": "9001",
+	"SQL_DATABASE": "develop",
+	"BROKER_HOST": "localhost",
+	"BROKER_PORT": "9100"
+}

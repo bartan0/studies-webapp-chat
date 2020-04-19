@@ -1,7 +1,8 @@
 {
 	"name": "webchat",
+	"version": "0.0.0",
 	"scripts": {
-		"dev-start": "NODE_PATH=src node src",
+		"dev-start": "NODE_PATH=. node src",
 		"docker": "node scripts/docker",
 		"sqlcmd": "node scripts/sqlcmd"
 	},

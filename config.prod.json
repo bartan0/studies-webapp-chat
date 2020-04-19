@@ -1,0 +1,10 @@
+{
+	"PORT": null,
+	"SQL_USERNAME": null,
+	"SQL_PASSWORD": null,
+	"SQL_HOST": null,
+	"SQL_PORT": null,
+	"SQL_DATABASE": null,
+	"BROKER_HOST": null,
+	"BROKER_PORT": null
+}
