@@ -7,7 +7,9 @@
 		"init-db-prod": "TARGET=production node scripts/init-db",
 		"sqlcmd": "node scripts/sqlcmd",
 		"sqlcmd-prod": "TARGET=production node scripts/sqlcmd",
-		"start": "NODE_PATH=. node src"
+		"start": "NODE_PATH=. node src",
+		"start-server": "NODE_PATH=. APP_TYPE=server node src",
+		"start-broker": "NODE_PATH=. APP_TYPE=broker node src"
 	},
 	"dependencies": {
 		"autoloader": "file:autoloader",

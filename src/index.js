@@ -1,6 +1,5 @@
-const { APP_TYPE = 'server' } = process.env
-
 global.App = {
+	Type: process.env.APP_TYPE || (() => { throw 'APP_TYPE must be specified' })(),
 	package: require('package.json'),
 	services: {},
 
@@ -14,5 +13,5 @@ global.App = {
 }
 
 require('autoloader')(__dirname, {
-	tags: [ APP_TYPE ]
+	tags: [ App.Type ]
 })
